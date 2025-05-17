@@ -5,12 +5,15 @@ using System.Text;
 
 var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+builder.Services.AddCors(options =>
 {
-    Args = args,
-    ApplicationName = typeof(Program).Assembly.FullName,
-    ContentRootPath = AppContext.BaseDirectory,
-    WebRootPath = "wwwroot",
-    // Removed Urls property as it is not valid for WebApplicationOptions
+    options.AddPolicy(name: corsPolicy,
+        policy =>
+        {
+            policy.WithOrigins("https://kksambo.github.io")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
 });
 
 builder.Services.AddDbContext<WasteManagementContext>(options =>
